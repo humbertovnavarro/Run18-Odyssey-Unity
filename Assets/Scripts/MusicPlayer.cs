@@ -1,104 +1,101 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 namespace Kamaii
 {
-    public enum Music
-    {
-        RUDEBUSTER,
-        MIRRORS,
-        CONSCIOUSNESS,
-        SKYLINE
-    }
-    public enum MusicFilter { 
-        OUTSIDE
-    }
     public class MusicPlayer : MonoBehaviour
     {
+        private static bool didJustStop;
+        public static event EventHandler OnMusicPlay;
+        public static event EventHandler OnMusicStop;
         [SerializeField]
-        [Range(0.0f, 2000f)]
-        private float m_LowpassCutoffFrequency;
+        private float _volume;
+        private static float volume;
         [SerializeField]
-        private AudioClip[] m_music;
-        [SerializeField]
-        private float m_Volume;
-        public static float volume;
-        private static AudioSource[] Sources { get; set; }
+        private AudioClip[] _music; 
+        private static Dictionary<string, AudioClip> music;
+        private static AudioSource _source;
         private static MusicPlayer instance;
-        private static AudioLowPassFilter LowPassFilter;
-        public static Music Playing { get; private set; }
-        private void Awake()
+        public static void Play(string name)
         {
-            instance = this;
-            volume = m_Volume;
-            PopulateMusic();
-            LowPassFilter = instance.gameObject.AddComponent<AudioLowPassFilter>();
-            LowPassFilter.cutoffFrequency = m_LowpassCutoffFrequency;
-            ToggleFilter(false);
-        }
-        public void Update()
-        {
-            //Remove me
-            Debug();
-            //
-        }
-        //Remove me
-        public void Debug()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            didJustStop = false;   
+            OnMusicPlay?.Invoke(instance, EventArgs.Empty);
+            if (instance == null)
             {
-
-                Play(Music.RUDEBUSTER);
+                Debug.LogError("No instance of Music Player in the scene.");
+                return;
             }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
+            if (name == null)
             {
-
-                Play(Music.CONSCIOUSNESS);
+                Debug.LogError("No clip name provided to MusicPlayer", instance);
             }
-            if (Input.GetKeyDown(KeyCode.Alpha3))
+            AudioClip clip = null;
+            if (music.TryGetValue(name, out clip))
             {
-
-                Play(Music.MIRRORS);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha4))
+                _source.volume = volume;
+                _source.Stop();
+                _source.loop = true;
+                _source.clip = clip;
+                _source.Play();
+            } else
             {
-
-                Play(Music.SKYLINE);
+                Debug.LogError("Could not find Audio Clip named: " + name);
             }
         }
-        //
-        public void PopulateMusic()
+        public static void PlayOneShot(string name)
         {
-            Sources = new AudioSource[m_music.Length];
-            for (int i = 0; i < m_music.Length; i++)
+            if (instance == null)
             {
-                AudioSource source = gameObject.AddComponent<AudioSource>();
-                source.clip = m_music[i];
-                source.playOnAwake = false;
-                source.loop = true;
-                source.volume = volume;
-                source.playOnAwake = true;
-                source.bypassEffects = false;
-                Sources[i] = source;
+                Debug.LogError("No instance of Music Player in the scene.");
+                return;
+            }
+            if (name == null)
+            {
+                Debug.LogError("No clip name provided to MusicPlayer", instance);
+            }
+            AudioClip clip = null;
+            if (music.TryGetValue(name, out clip))
+            {
+                _source.volume = volume;
+                _source.Stop();
+                _source.loop = false;
+                _source.clip = clip;
+                _source.Play();
+            }
+            else
+            {
+                Debug.LogError("Could not find Audio Clip named: " + name);
             }
         }
-        public static void Play(Music song)
+        private void Update()
         {
-            Playing = song;
-            for (int i = 0; i < Sources.Length; i++)
+            if (_source == null)
+                return;
+            if(!_source.isPlaying && !didJustStop)
             {
-                if (i != (int)song)
+                didJustStop = true;
+                OnMusicStop?.Invoke(instance, EventArgs.Empty);
+            }
+        }
+        void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+                _source = instance.GetComponent<AudioSource>();
+                volume = _volume;
+                music = new Dictionary<string, AudioClip>();
+                foreach (AudioClip clip in _music)
                 {
-                    Sources[i].Stop();
-                } else
-                {
-                    Sources[i].Play();
+                    music.Add(clip.name, clip);
                 }
             }
-        }
-        public static void ToggleFilter(bool value)
-        {
-            LowPassFilter.enabled = value;
+            else
+            {
+                Debug.LogError("Found two instances of MusicPlayer in the scene. Destroying newer one...", instance);
+                GameObject.Destroy(this);
+            }
         }
     }
 }
