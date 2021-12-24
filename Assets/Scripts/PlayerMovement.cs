@@ -1,75 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace Kamaii {
-    public class PlayerMovement : MonoBehaviour
+namespace Kamaii
+{
+    class PlayerMovement: MonoBehaviour 
     {
+        private Rigidbody2D _rb;
         [SerializeField]
         private float _speed;
-        public float Speed { get => _speed; private set => _speed = value; }
-        private float[] speedMultipliers;
-        private float[] speedAdditives;
-        private Player player;
-        private void Start()
+        [SerializeField]
+        private float _speedMultiplier = 1f;
+        void Awake()
         {
-            speedAdditives = new float[25];
-            speedMultipliers = new float[25];
-            player = GetComponent<Player>();
+            _speedMultiplier = 1;
+            _rb = GetComponent<Rigidbody2D>();
         }
-        float CalculatedSpeed()
+        void FixedUpdate()
         {
-            float calculatedSpeed = Speed;
-            float multiplier = 1;
-            float additive = 0;
-            foreach (float number in speedMultipliers)
-            {
-                multiplier += number;
-            }
-            foreach (float number in speedAdditives)
-            {
-                additive += number;
-            }
-            calculatedSpeed = Speed * multiplier;
-            calculatedSpeed += additive;
-            return calculatedSpeed;
+            Move();
         }
-        void Update()
+        void Move()
         {
-            if (Game.Paused)
+            switch (PlayerInput.InputDirection)
             {
-                return;
-            }
-            TryMove();
-        }
-        private void TryMove()
-        {
-            if (!Player.isMoveAttempt)
-            {
-                return;
-            }
-            switch (Player.PlayerDirection)
-            {
-                case Direction.LEFT:
-                    move(Vector2.left);
-                    break;
-                case Direction.RIGHT:
-                    move(Vector2.right);
-                    break;
                 case Direction.UP:
-                    move(Vector2.up);
+                    _rb.velocity = Vector2.up * _speed * _speedMultiplier;
                     break;
                 case Direction.DOWN:
-                    move(Vector2.down);
+                    _rb.velocity = Vector2.down * _speed * _speedMultiplier;
+                    break;
+                case Direction.LEFT:
+                    _rb.velocity = Vector2.left * _speed * _speedMultiplier;
+                    break;
+                case Direction.RIGHT:
+                    _rb.velocity = Vector2.right * _speed * _speedMultiplier;
                     break;
                 default:
+                    _rb.velocity = Vector2.zero;
                     break;
             }
         }
-        private void move(Vector2 direction)
-        {
-            Vector2 movePoint = Vector2.Lerp(transform.position,(Vector2)transform.position + direction, CalculatedSpeed());
-            player.PlayerRigidBody.MovePosition(movePoint);
-        }
     }
-}
 
+}

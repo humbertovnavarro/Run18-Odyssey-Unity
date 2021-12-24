@@ -153,7 +153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2e83cddb1623647848a959e3a28139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_paused: 0
 --- !u!4 &242513568
 Transform:
   m_ObjectHideFlags: 0
@@ -180,15 +179,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4f17802736d44641a8fcc2bb40f65ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ItemSprites:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_ItemStacks: 0000000000000000000000000000000000000000
-  m_ItemNames: []
-  m_ItemDescriptions: []
 --- !u!1 &360902436
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,11 +193,10 @@ GameObject:
   - component: {fileID: 360902439}
   - component: {fileID: 360902438}
   - component: {fileID: 360902437}
-  - component: {fileID: 360902443}
-  - component: {fileID: 360902444}
-  - component: {fileID: 360902445}
-  - component: {fileID: 360902446}
   - component: {fileID: 360902447}
+  - component: {fileID: 360902445}
+  - component: {fileID: 360902444}
+  - component: {fileID: 360902443}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -451,9 +440,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 360902436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f748230761fb8a04fa1a5b765f2abb4e, type: 3}
+  m_Script: {fileID: 11500000, guid: a7db18155b80e5c49a999a58ece24362, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _speed: 2
+  _speedMultiplier: 1
 --- !u!114 &360902444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,10 +454,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 360902436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63cfffd4afcc67a42b7e26278fd978a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 62716c0d80048a7468414a9f3ab2f340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 0.1
+  _up: 119
+  _down: 115
+  _left: 97
+  _right: 100
 --- !u!114 &360902445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,22 +470,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 360902436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fb85834ec6b3e54f8a4fe332541b076, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ae8c9dd2ccc86b498c6805f4e32c542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &360902446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360902436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d6cef98f786bd74c99dc771d37e8672, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slots: 0
 --- !u!81 &360902447
 AudioListener:
   m_ObjectHideFlags: 0
@@ -599,13 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc566147c34dd094cbb4cc97114d227c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LowpassCutoffFrequency: 450
-  m_music:
-  - {fileID: 8300000, guid: 9e48e45fde566364f8e14629f49d69b8, type: 3}
-  - {fileID: 8300000, guid: 7e69a3ec052811d44aaf90763eb95cc9, type: 3}
-  - {fileID: 8300000, guid: 5fb65104313632f4ea7d4dcb4a464075, type: 3}
-  - {fileID: 8300000, guid: a8c14bcba058f124b89c4d2046ecf7d7, type: 3}
-  m_Volume: 0.15
+  _music: []
 --- !u!4 &625370401
 Transform:
   m_ObjectHideFlags: 0
